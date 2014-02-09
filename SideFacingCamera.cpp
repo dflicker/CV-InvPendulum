@@ -8,6 +8,8 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+#include <math.h>
+
 using namespace cv;
 using namespace std;
 int main(int, char**)
@@ -30,7 +32,7 @@ int main(int, char**)
 	Mat PurpleFiltered;
 	inRange(HSVFrame, Scalar(100, 10, 20), Scalar(160, 255, 200), PurpleFiltered);
 	GaussianBlur(PurpleFiltered, PurpleFiltered, Size(9, 9), 2, 2);
-	// PurpleFiltered is now a bitmask or purple in the original image
+	// PurpleFiltered is now a bitmask of purple in the original image
 	vector<Vec3f> circles;
 	vector<Vec3f> two_circles(2);
 	HoughCircles(PurpleFiltered, circles, CV_HOUGH_GRADIENT, 3, PurpleFiltered.rows / 4, 500, 50, 20, PurpleFiltered.rows);
@@ -66,7 +68,9 @@ int main(int, char**)
 	    circle(frame, center, radius, Scalar(0, 0, 255), 3, 8, 0);
 	}
 	num_frames++;
-	
+	Vec3f rod = old_circles[1] - old_circles[0];
+	double angle = -atan2(rod[0], rod[1]) * 180.0 / 3.14159265;
+	cout << "Angle: " << angle << endl;
 	Mat res;
 	// bitwise_and(frame, frame, res, PurpleFiltered);
 	imshow("edges", frame);
